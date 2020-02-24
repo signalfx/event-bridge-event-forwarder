@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  EncryptedSignalFxAccessToken:
+    Type: String
+  SignalFxIngestEndpoint:
+    Type: String
+  SignalFxSendTimeout:
+    Type: String
+
+Resources:
+  SignalFxLambdaWrapperApp:
+    Type: AWS::Serverless::Application
+    Properties:
+      Location:
+        ApplicationId: signalfx-lambda-nodejs-wrapper-app
+        SemanticVersion: 0.0.1
+    Outputs:
+      LayerArn:
+        Value:
+          Fn:GetAtt:
+            - SignalFxLambdaWrapperApp
+            - Arn
+
+  SignalFxCloudwatchEventsForwarderEncrypted:
+    Type: AWS::Serverless::Function
+    Properties:
+      Layers:
+        - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
+      Handler: cloudwatch-event-forwarder.handler
+      Runtime: node12.x
+      CodeUri: cloudwatch-event-forwarder.js
+      Description: Transforms Cloudwatch Events to SignalFx Custom Events and forwards them.
+      Timeout: 5.0
+      Environment:
+        Variables:
+          ENCRYPTED_SIGNALFX_AUTH_TOKEN:
+            Ref: SignalFxAccessToken
+          SIGNALFX_INGEST_ENDPOINT:
+            Ref: SignalFxIngestEndpoint
+          SIGNALFX_SEND_TIMEOUT:
+            Ref: SignalFxSendTimeout
+      Policies:
+        - KMSDecryptPolicy:
+            KeyId:
+              Ref: KeyId
