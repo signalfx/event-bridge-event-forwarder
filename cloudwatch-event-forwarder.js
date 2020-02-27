@@ -1,3 +1,7 @@
+// This code will transform CloudWatch Event to SignalFx Custom Event and send it to the
+// SignalFx realm configured with environment variables. It uses SignalFx Lambda Wrapper.
+// If you do not intend to encrypt your SIGNALFX_AUTH_TOKEN, you can use much simpler cloudwatch-event-forwarder-no-encryption.js instead.
+
 'use strict';
 
 const signalFxLambda = require('signalfx-lambda');
@@ -5,8 +9,7 @@ const aws = require('aws-sdk');
 const kms = new aws.KMS();
 
 async function setToken() {
-  const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN, 'base64');
-  if (!tokenToDecrypt) {
+  if (!process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN) {
     if (process.env.SIGNALFX_AUTH_TOKEN) {
       return Promise.resolve();
     } else {
@@ -14,6 +17,7 @@ async function setToken() {
     }
   }
 
+  const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN, 'base64');
   return new Promise((resolve, reject) => {
     const params = {
       CiphertextBlob: tokenToDecrypt
@@ -28,8 +32,9 @@ async function setToken() {
   });
 }
 
-const logic = async (event, context) => signalFxLambda.helper.sendCloudwatchEvent(event)
-  .then(() => console.log('event sent to SignalFx'))
+// See ./examples for modifications of this function
+const logic = async (event, context) => signalFxLambda.helper.sendCloudWatchEvent(event)
+  .then(() => console.log('Event sent to SignalFx'))
   .catch(err => console.log('Unable to send the event to SignalFx', err));
 
 
@@ -39,4 +44,3 @@ exports.handler = async function (event, context) {
     return SignalFxWrapper.call(this, event, context);
   });
 };
-
