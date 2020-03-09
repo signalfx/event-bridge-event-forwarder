@@ -13,6 +13,8 @@ You should use the rules to filter the CloudWatch Events you want to be forwarde
 You can install this function in two ways:
 * Option 1) From Serverless Application Repository (recommended)
 * Option 2) Manually with AWS Lambda Console
+This instruction covers option 1).
+Option 2) is covered in the [README](https://github.com/signalfx/cloudwatch-event-forwarder).
 
 ##### Note: Encryption of your SignalFx Access Token
 Regardless of the installation method, you will need to provide the Function with a SignalFx Access Token stored in an environment variable.
@@ -87,72 +89,6 @@ Set the `KeyId` parameter to the Key Id of this key; it is the last section of t
 * Click "Deploy". 
 * You're ready! The integration is now configured. See [here](https://docs.signalfx.com/en/latest/detect-alert/events-intro.html) how to view and use events in SignalFx.
 * (Optional) If you wish to modify any application parameters, you can now do so in AWS Console. You may be interested in modifying Lambda code or the CloudWatch Events rule which triggers the Lambda.
-
-
-### Option 2 - Manually with AWS Lambda Console
-#### Overview
-In this option, you will create a Lambda function and manually configure its dependencies, environment variables and a trigger. 
-While more time consuming, it will give you better understanding of the inner workings of the process.
-
-#### Step 1: Create a Lambda function in AWS Console
-
-##### Step 1.1: Create a function
-* Sign in to the AWS Management Console and open the [AWS Lambda console](https://console.aws.amazon.com/lambda/) and switch to the target region. Review the note below on choosing a region. 
-
-###### Choosing a region
-To benefit from the most convenient installation procedure, use one of the regions for which we provide a SignalFx Lambda Wrapper as Layer (a majority of regions, except for ap-east-1 and me-south-1).
-To confirm that the region is supported, locate its Layer ARN [here](https://github.com/signalfx/lambda-layer-versions/blob/master/node/NODE.md). 
-If you wish to install in the region which is not supported, you can still do so, but you will need to deploy the copy of the Layer to your account, using Serverless Application Repository.
-The steps to accomplish this can be found [here](https://github.com/signalfx/lambda-nodejs#option-2-create-a-lambda-function-then-create-and-attach-a-layer-based-on-a-signalfx-template).
-
-* Click "Create function" and choose the first option "Author from scratch".
-* Enter a function name, for example `cloudwatch-event-forwarder`.
-* Choose `Node 12.x` as a runtime.
-* Let AWS create a new role with basic Lambda permissions or choose the existing role depending on how you manage permissions in your account.
-* Click "Create function."
-
-##### Step 1.2: Copy function code and set the handler
-* Copy the contents of the `cloudwatch-event-forwarder.js` file to the Console Editor.
-* Set the function handler to `index.handler`.
-
-###### Note: Alternative scripts:
-Instead of the default `cloudwatch-event-forwarder.js` file, you can copy any of the following files if they better suits your needs: 
-* If you don't intend to encrypt your token with KMS, you may use `examples/cloudwatch-event-forwarder-no-encryption.js`. The default forwarder will work, but the one without encryption has much simpler code.
-* If you intend to change how events are sent (filter some fields only, change names etc.) and do not need encryption, use `examples/cloudwatch-event-forwarder-custom.js` as a base and change accordingly.
-* Modify the handler name to reflect the naming in your function.
-
-#### Step 2: Add a Layer to the function
-* The forwarder uses [SignalFx Lambda Wrapper for Node.js](https://github.com/signalfx/lambda-nodejs) to connect to SignalFx.
-The most convenient way to provide the wrapper is to use [AWS Lambda Layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html). 
-In the configuration tab of the Lambda console, click the "Layers" panel and then "Add a layer" button. 
-* Select "Provide a layer version ARN"
-* Copy the Layer ARN in your region from [the list of available layers](https://github.com/signalfx/lambda-layer-versions/blob/master/node/NODE.md) and click "Add".
-If you have chosen a region which is not supported, you can still add a layer, but you need to deploy a copy of the layer to your account first, which can be accomplished by following [the installation steps for the Lambda Wrapper](https://github.com/signalfx/lambda-nodejs#option-2-create-a-lambda-function-then-create-and-attach-a-layer-based-on-a-signalfx-template).
-
-#### Step 3: Configure environment variables
-##### Option 1) Setup without token encryption
-* Set `SIGNALFX_AUTH_TOKEN` to the SignalFx Auth Token value you identified when preparing Prerequisites.
-* Set `SIGNALFX_INGEST_ENDPOINT` to the SignalFx Ingest Endpoint value you identified when preparing Prerequisites.
-* Optionally, you can set `SIGNALFX_SEND_TIMEOUT` to a value in milliseconds. Default: 1000.
-
-##### Option 2) Setup with token encryption
-* Click "Edit" in the Environment Variables section.
-* Expand "Encryption configuration" section and toggle "Enable helpers for encryption in transit". You may leave the default setting for encryption at rest.
-* Add a an `ENCRYPTED_SIGNALFX_AUTH_TOKEN` variable, set its value to the SignalFx Auth Token identified when following the Prerequisites. Click "Encrypt" next to the variable and choose a key to perform the encryption.
-* Set `SIGNALFX_INGEST_ENDPOINT` to the SignalFx Auth Token value you identified when preparing Prerequisites.
-* Optionally, you can set `SIGNALFX_SEND_TIMEOUT` to a value in milliseconds. Default: 1000.
-
-#### Step 4: Add a trigger to the function
-* In the Designer tab, click "Add trigger" button on the left.
-* Choose "CloudWatch Events/ EventBridge" from the list in the dropdown
-* Select CloudWatch Rule to filter desired events or create a new one. 
-For help creating rules, consult [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/services-cloudwatchevents.html).
-
-Note: the list of services available in the Lambda Designer is a short list of most common choices. 
-If you need a richer editor and all the sources available, you can create the rule through CloudWatch Events console and select the target there.
-
-#### Step 5: The integration is installed
-You're ready! The integration is now configured. See [here](https://docs.signalfx.com/en/latest/detect-alert/events-intro.html) how to view and use events in SignalFx.
 
 ### Additional Information
 #### Details on CloudWatch event to SignalFx Custom Event transformation

@@ -40,6 +40,7 @@ const logic = async (event, context) => signalFxLambda.helper.sendCloudWatchEven
 
 exports.handler = async function (event, context) {
   return setToken().then(token => {
+
     let SignalFxWrapper = signalFxLambda.asyncWrapper(logic, {}, token);
     return SignalFxWrapper.call(this, event, context);
   });

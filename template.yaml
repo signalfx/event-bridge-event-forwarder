@@ -1,38 +1,46 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion : '2010-09-09'
+Description: 'SignalFx Cloudwatch Event Forwarder App'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   SignalFxAccessToken:
     Type: String
+    Description: 'SignalFx Access Token. Can be found in SignalFx (right corner) --> Organization Settings --> Access Tokens.'
   SignalFxIngestEndpoint:
     Type: String
+    Default: 'https://ingest.<REALM>.signalfx.com'
+    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
   SignalFxSendTimeout:
     Type: String
+    Default: 1000
+    Description: 'Send timeout in milliseconds.'
+  EventSources:
+    Type: CommaDelimitedList
+    Default: 'aws.ec2'
+    Description: 'Event sources to forward to SignalFx. Use "*" for all CloudWatch events. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3".'
 
 Resources:
   SignalFxLambdaWrapperApp:
     Type: AWS::Serverless::Application
     Properties:
       Location:
-        ApplicationId: signalfx-lambda-nodejs-wrapper-app
-        SemanticVersion: 0.0.1
+        ApplicationId: arn:aws:serverlessrepo:us-east-2:254067382080:applications/signalfx-lambda-nodejs-wrapper-app
+        SemanticVersion: 0.0.2
     Outputs:
       LayerArn:
         Value:
           Fn:GetAtt:
             - SignalFxLambdaWrapperApp
             - Arn
-
   SignalFxCloudwatchEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
       Layers:
         - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
       Handler: cloudwatch-event-forwarder.handler
-      Runtime: node12.x
+      Runtime: nodejs12.x
       CodeUri: cloudwatch-event-forwarder.js
-      Description: Transforms Cloudwatch Events to SignalFx Custom Events and forwards them.
-      Timeout: 5.0
+      Timeout: 60
       Environment:
         Variables:
           SIGNALFX_AUTH_TOKEN:
@@ -41,3 +49,15 @@ Resources:
             Ref: SignalFxIngestEndpoint
           SIGNALFX_SEND_TIMEOUT:
             Ref: SignalFxSendTimeout
+      Events:
+        CloudWatchEvent:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                Ref: EventSources
+
+# Publishing the App in Serverless application repo:
+# sam validate --profile <awsprofile> --template template.yaml --region <region>
+# sam package --profile <awsprofile> --s3-bucket <bucket> --region <region> --output-template-file packaged.yaml --template template.yaml
+# Use AWS SAM CLI or AWS console to publish the packaged.yaml file.
