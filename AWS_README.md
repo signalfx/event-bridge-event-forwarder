@@ -11,10 +11,11 @@ You should use the rules to filter the CloudWatch Events you want to be forwarde
 
 ## Installation
 You can install this function in two ways:
-* Option 1) From Serverless Application Repository (recommended)
-* Option 2) Manually with AWS Lambda Console
-This instruction covers option 1).
-Option 2) is covered in the [README](https://github.com/signalfx/cloudwatch-event-forwarder).
+* __Option 1)__ From Serverless Application Repository (recommended)
+* __Option 2)__ Manually with AWS Lambda Console
+
+This instruction covers Option 1.
+Option 2 is covered in the [README](https://github.com/signalfx/cloudwatch-event-forwarder).
 
 ##### Note: Encryption of your SignalFx Access Token
 Regardless of the installation method, you will need to provide the Function with a SignalFx Access Token stored in an environment variable.
@@ -50,13 +51,10 @@ You have an option to encrypt SignalFx Access token in transit, which is a pract
 
 To do so, please make sure you have a managed Symmetric KMS key available for use.
 * If you are creating a new key, make sure you choose a Symmetric key.
-* Make sure to to add the Lambda's IAM role as a Key User. 
-If you do not yet know which role you will use for your Lambda function, you can modify the key later on, after the Lambda function is created.
-If you install via Serverless Repo, we're going to do it for you. 
 * For overview and help on securing environment variables, consult the [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption).
 * Documentation on KMS encryption using the AWS CLI can be found [here](http://docs.aws.amazon.com/cli/latest/reference/kms/encrypt.html). 
 
-Regardless of the key creation method, make sure you have access to the cipher text output by the encryption as well as the key id of the encryption key you used.
+Regardless of the key creation method, make sure you have access to the cipher text output as well as the Key Id of the encryption key you used.
 
 ### Option 1 - Install from Serverless Application Repository (Recommended)
 
@@ -65,7 +63,7 @@ A Lambda Layer, Lambda Function, CloudWatch Event Rule and all necessary configu
 This is a recommended and less time-consuming option.
 
 __NOTE__: If you choose a version with token encryption, it will be by default configured to omit the events from `aws.kms`. 
-The reason for this behavior is to avoid an indefinite loop: when the lambda runs, it decrypts the token and thus generates a Cloudwatch Event.
+The reason for this behavior is to avoid an infinite loop: when the lambda runs, it decrypts the token and thus generates a Cloudwatch Event.
 
 #### Step 1: Locate the application in Serverless Application Repository
 * Sign in to the AWS Management Console and open the [Serverless Application Repository console](https://console.aws.amazon.com/serverlessrepo/).
@@ -76,7 +74,7 @@ The reason for this behavior is to avoid an indefinite loop: when the lambda run
 * Set the `EventSources` parameter to include the services from which you want to forward events to SignalFx. Enter `*` for all CloudWatch Events.
 Enter a comma delimited list to specify multiple services as sources, for example: `aws.ec2,aws.s3`.
 
-    Note: You will be later able to modify the Event Pattern in CloudWatch Events console.
+    __NOTE__: You will be later able to modify the Event Pattern in CloudWatch Events console.
 
 * If you chose version without encryption, set `SignalFxAccessToken` to the SignalFx Access Token value you identified in Prerequisites.  
 * If you chose version with encryption, set `EncryptedSignalFxAccessToken` to the value of SignalFx Access Token identified in Prerequisites encrypted with a prepared KMS key. 
@@ -115,38 +113,38 @@ For example, a sample CloudWatch event:
 
 ```json
 {
-   "id":"7bf73129-1428-4cd3-a780-95db273d1602",
-   "detail-type":"EC2 Instance State-change Notification",
-   "source":"aws.ec2",
-   "account":"123456789012",
-   "time":"2015-11-11T21:29:54Z",
-   "region":"us-east-1",
-   "resources":[
-      "arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111"
-   ],
-   "detail":{
-      "instance-id":"i-abcd1111",
-      "state":"pending"
-   }
+  "id":"7bf73129-1428-4cd3-a780-95db273d1602",
+  "detail-type":"EC2 Instance State-change Notification",
+  "source":"aws.ec2",
+  "account":"123456789012",
+  "time":"2015-11-11T21:29:54Z",
+  "region":"us-east-1",
+  "resources":[
+    "arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111"
+  ],
+  "detail":{
+    "instance-id":"i-abcd1111",
+    "state":"pending"
+  }
 }
 ```
 will be transformed to a Custom SignalFx Event:
 ```json
 {
-   "category": "USER_DEFINED",
-   "eventType": "CloudWatch",
-   "dimensions": { 
-      "detailType":"EC2 Instance State-change Notification",
-      "source":"aws.ec2",
-      "account":"123456789012",
-      "region":"us-east-1"
-   },
-   "properties": { 
-      "id":"7bf73129-1428-4cd3-a780-95db273d1602", 
-      "resources_0": "arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111",
-      "detail_instance-id": "i-abcd1111",
-      "detail.state":"pending"
-   },
-   "timestamp": 1447277394000
+  "category":"USER_DEFINED",
+  "eventType":"CloudWatch",
+  "dimensions":{
+    "detailType":"EC2 Instance State-change Notification",
+    "source":"aws.ec2",
+    "account":"123456789012",
+    "region":"us-east-1"
+  },
+  "properties":{
+    "id":"7bf73129-1428-4cd3-a780-95db273d1602",
+    "resources_0":"arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111",
+    "detail_instance-id":"i-abcd1111",
+    "detail_state":"pending"
+  },
+  "timestamp":1447277394000
 }
 ```
