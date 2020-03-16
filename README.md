@@ -55,8 +55,8 @@ Regardless of the key creation method, make sure you have access to the cipher t
 
 ## Installation
 You can install this function in two ways:
-* __Option 1) (Recommended)__ [From Serverless Application Repository](option-1-recommended-install-from-serverless-application-repository) 
-* __Option 2)__ [Manually with AWS Lambda Console](option-2-manually-with-aws-lambda-console)
+* __Option 1) (Recommended)__ [From Serverless Application Repository](#option-1-recommended-install-from-serverless-application-repository) 
+* __Option 2)__ [Manually with AWS Lambda Console](#option-2-manually-with-aws-lambda-console)
 
 ### Option 1: (Recommended) Install from Serverless Application Repository 
 
@@ -114,13 +114,13 @@ While more time consuming, it will give you better understanding of the inner wo
 * Click "Create function."
 
 ##### Step 1.2: Copy function code and set the handler
-* Copy the contents of the [`cloudwatch-event-forwarder.js`](https://github.com/signalfx/cloudwatch-event-forwarder/blob/master/cloudwatch-event-forwarder.js) file to the Console Editor.
+* Copy the contents of the [`cloudwatch-event-forwarder.js`](cloudwatch-event-forwarder.js) file to the Console Editor.
 * Set the function handler to `index.handler`.
 
 __NOTE:__ Alternative scripts:
-Instead of the default `cloudwatch-event-forwarder.js` file, you can copy any of the following files if they better suit your needs: 
-* If you don't intend to encrypt your token with KMS, you may use `examples/cloudwatch-event-forwarder-no-encryption.js`. The default forwarder will work, but the one without encryption has much simpler code.
-* If you intend to change how events are sent (filter some fields only, change names etc.) and do not need encryption, use `examples/cloudwatch-event-forwarder-custom.js` as a base and change accordingly.
+Instead of the default [`cloudwatch-event-forwarder.js`](cloudwatch-event-forwarder.js) file, you can copy any of the following files if they better suit your needs: 
+* If you don't intend to encrypt your token with KMS, you may use [`examples/cloudwatch-event-forwarder-no-encryption.js`](examples/cloudwatch-event-forwarder-no-encryption.js). The default forwarder will work, but the one without encryption has much simpler code.
+* If you intend to change how events are sent (filter some fields only, change names etc.) and do not need encryption, use [`examples/cloudwatch-event-forwarder-custom.js`](examples/cloudwatch-event-forwarder-custom.js) as a base and change accordingly.
 * Modify the handler name to reflect the naming in your function.
 
 #### Step 2: Add a Layer to the function
