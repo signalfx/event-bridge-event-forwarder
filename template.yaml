@@ -5,11 +5,11 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   SignalFxAccessToken:
     Type: String
-    Description: 'SignalFx Access Token. Can be found in SignalFx (right corner) --> Organization Settings --> Access Tokens.'
+    Description: 'SignalFx Access Token. Can be found in SignalFx (top right corner) --> Organization Settings --> Access Tokens.'
   SignalFxIngestEndpoint:
     Type: String
     Default: 'https://ingest.<REALM>.signalfx.com'
-    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
+    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (top right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
   SignalFxSendTimeout:
     Type: String
     Default: 1000
@@ -18,6 +18,9 @@ Parameters:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
     Description: 'Event sources to forward to SignalFx. Use "*" for all CloudWatch events. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3".'
+
+Conditions:
+  AllCWEvents: !Equals [!Select [ 0, !Ref EventSources ], '*']
 
 Resources:
   SignalFxLambdaWrapperApp:
@@ -37,9 +40,9 @@ Resources:
     Properties:
       Layers:
         - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
-      Handler: cloudwatch-event-forwarder.handler
+      Handler: cloudwatch-event-forwarder-no-encryption.handler
       Runtime: nodejs12.x
-      CodeUri: cloudwatch-event-forwarder.js
+      CodeUri: ./examples/cloudwatch-event-forwarder-no-encryption.js
       Timeout: 60
       Environment:
         Variables:
@@ -50,12 +53,11 @@ Resources:
           SIGNALFX_SEND_TIMEOUT:
             Ref: SignalFxSendTimeout
       Events:
-        CloudWatchEvent:
+        CWEvent:
           Type: CloudWatchEvent
           Properties:
             Pattern:
-              source:
-                Ref: EventSources
+              source: !If [AllCWEvents, [prefix: "aws"], !Ref EventSources]
 
 # Publishing the App in Serverless application repo:
 # sam validate --profile <awsprofile> --template template.yaml --region <region>

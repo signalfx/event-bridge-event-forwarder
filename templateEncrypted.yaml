@@ -5,11 +5,11 @@ Transform: AWS::Serverless-2016-10-31
 Parameters:
   EncryptedSignalFxAccessToken:
     Type: String
-    Description: 'Encrypted SignalFx Access Token. The token to encrypt can be found in SignalFx (right corner) --> Organization Settings --> Access Tokens.'
+    Description: 'Encrypted SignalFx Access Token. The token to encrypt can be found in SignalFx (top right corner) --> Organization Settings --> Access Tokens.'
   SignalFxIngestEndpoint:
     Type: String
     Default: 'https://ingest.<REALM>.signalfx.com'
-    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
+    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (top right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
   SignalFxSendTimeout:
     Type: String
     Default: 1000
@@ -66,7 +66,3 @@ Resources:
         - KMSDecryptPolicy:
             KeyId:
               Ref: KeyId
-# Publishing the App in Serverless application repo:
-# sam validate --profile <awsprofile> --template template.yaml --region <region>
-# sam package --profile <awsprofile> --s3-bucket <bucket> --region <region> --output-template-file packaged.yaml --template template.yaml
-# Use AWS SAM CLI or AWS console to publish the packaged.yaml file.

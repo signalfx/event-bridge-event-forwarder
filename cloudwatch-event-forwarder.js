@@ -11,7 +11,7 @@ const kms = new aws.KMS();
 async function setToken() {
   if (!process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN) {
     if (process.env.SIGNALFX_AUTH_TOKEN) {
-      return Promise.resolve();
+      return Promise.resolve(process.env.SIGNALFX_AUTH_TOKEN);
     } else {
       return Promise.reject('Neither SIGNALFX_AUTH_TOKEN nor ENCRYPTED_SIGNALFX_AUTH_TOKEN is set');
     }
