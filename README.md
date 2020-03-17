@@ -140,7 +140,7 @@ If you have chosen a region which is not supported, you can still add a layer, b
 ##### Option 2) Setup with token encryption
 * Click "Edit" in the Environment Variables section.
 * Expand "Encryption configuration" section and toggle "Enable helpers for encryption in transit". You may leave the default setting for encryption at rest.
-* Add a an `ENCRYPTED_SIGNALFX_AUTH_TOKEN` variable, set its value to the SignalFx Access Token identified when following the Prerequisites. Click "Encrypt" next to the variable and choose a key to perform the encryption.
+* Add an `ENCRYPTED_SIGNALFX_AUTH_TOKEN` variable, set its value to the SignalFx Access Token identified when following the Prerequisites. Click "Encrypt" next to the variable and choose a key to perform the encryption.
 * Set `SIGNALFX_INGEST_ENDPOINT` to the SignalFx Access Token value you identified when preparing Prerequisites.
 * Optionally, you can set `SIGNALFX_SEND_TIMEOUT` to a value in milliseconds. Default: 1000.
 
