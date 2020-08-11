@@ -192,7 +192,8 @@ For example, a sample CloudWatch event:
   ],
   "detail":{
     "instance-id":"i-abcd1111",
-    "state":"pending"
+    "state":"pending",
+    "obj": {"key": "val"}
   }
 }
 ```
@@ -209,9 +210,10 @@ will be transformed to a Custom SignalFx Event:
   },
   "properties":{
     "id":"7bf73129-1428-4cd3-a780-95db273d1602",
-    "resources_0":"arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111",
+    "resources":"[\"arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111\"]",
     "detail_instance-id":"i-abcd1111",
-    "detail_state":"pending"
+    "detail_state":"pending",
+    "detail_obj":"{\"key\":\"val\"}"
   },
   "timestamp":1447277394000
 }
