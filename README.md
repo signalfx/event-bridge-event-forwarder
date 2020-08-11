@@ -170,11 +170,12 @@ By default, based on a Cloudwatch Event, this lambda will create a SignalFx Cust
 * `source`, `account`, `detail-type`, `region` keys which are common for all CloudWatch events and have a limited set of possible values will be sent as `dimensions` (`detail-type` will be sent as `detailType`)
 * `time` property will be converted to Unix epoch time and sent as a timestamp of the SignalFx Custom Event.
 
-Other keys will be transformed in the ways listed below, and sent as `properties`:
+Other keys will be transformed in the ways listed below and sent as `properties`:
 * special characters in keys, such as `" "` (space), `":"` or `"/"` will be replaced with a `"_"` character. The allowed characters are `[a-zA-Z0-9\-_]`.
-* for nested objects, each of its properties will be copied to the SignalFx Custom Event under a key which is a join of all parent objects' names separated with a `"_"` character.
+* `resources` array will be stringified.
+* `id` will be copied as is.
+* objects and arrays from `detail` section will be stringified and copied to the SignalFx Custom Event with a `"detail_"` prefix.
 See exemplary transformation below.
-* for arrays, each element will be copied to the SignalFx Custom Event under a key which is a `"_"` character join of an array name and an index of the element.
 
 
 For example, a sample CloudWatch event:
