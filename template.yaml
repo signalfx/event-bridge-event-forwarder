@@ -28,7 +28,7 @@ Resources:
     Properties:
       Location:
         ApplicationId: arn:aws:serverlessrepo:us-east-2:254067382080:applications/signalfx-lambda-nodejs-wrapper-app
-        SemanticVersion: 0.0.2
+        SemanticVersion: 0.0.3
     Outputs:
       LayerArn:
         Value:
