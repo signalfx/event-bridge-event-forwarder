@@ -170,11 +170,12 @@ By default, based on a Cloudwatch Event, this lambda will create a SignalFx Cust
 * `source`, `account`, `detail-type`, `region` keys which are common for all CloudWatch events and have a limited set of possible values will be sent as `dimensions` (`detail-type` will be sent as `detailType`)
 * `time` property will be converted to Unix epoch time and sent as a timestamp of the SignalFx Custom Event.
 
-Other keys will be transformed in the ways listed below, and sent as `properties`:
+Other keys will be transformed in the ways listed below and sent as `properties`:
 * special characters in keys, such as `" "` (space), `":"` or `"/"` will be replaced with a `"_"` character. The allowed characters are `[a-zA-Z0-9\-_]`.
-* for nested objects, each of its properties will be copied to the SignalFx Custom Event under a key which is a join of all parent objects' names separated with a `"_"` character.
+* `resources` array will be stringified.
+* `id` will be copied as is.
+* objects and arrays from `detail` section will be stringified and copied to the SignalFx Custom Event with a `"detail_"` prefix.
 See exemplary transformation below.
-* for arrays, each element will be copied to the SignalFx Custom Event under a key which is a `"_"` character join of an array name and an index of the element.
 
 
 For example, a sample CloudWatch event:
@@ -192,7 +193,8 @@ For example, a sample CloudWatch event:
   ],
   "detail":{
     "instance-id":"i-abcd1111",
-    "state":"pending"
+    "state":"pending",
+    "obj": {"key": "val"}
   }
 }
 ```
@@ -209,9 +211,10 @@ will be transformed to a Custom SignalFx Event:
   },
   "properties":{
     "id":"7bf73129-1428-4cd3-a780-95db273d1602",
-    "resources_0":"arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111",
+    "resources":"[\"arn:aws:ec2:us-east-1:123456789012:instance/i-abcd1111\"]",
     "detail_instance-id":"i-abcd1111",
-    "detail_state":"pending"
+    "detail_state":"pending",
+    "detail_obj":"{\"key\":\"val\"}"
   },
   "timestamp":1447277394000
 }
