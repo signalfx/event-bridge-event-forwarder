@@ -32,7 +32,7 @@ Resources:
     Properties:
       Location:
         ApplicationId: arn:aws:serverlessrepo:us-east-2:254067382080:applications/wrapper-node-sfx-app
-        SemanticVersion: 0.0.5
+        SemanticVersion: 0.4.2
     Outputs:
       LayerArn:
         Value:
