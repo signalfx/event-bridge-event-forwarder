@@ -17,7 +17,7 @@ Parameters:
   EventSources:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
-    Description: 'Event sources to forward to SignalFx. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3".'
+    Description: 'Event sources to forward to SignalFx. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3. Please avoid "aws.kms" as this will lead to invocation loop. Be cautious with using "aws.lambda" (more in README)'
   KeyId:
     Type: String
     Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
