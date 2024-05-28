@@ -17,7 +17,7 @@ Parameters:
   EventSources:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
-    Description: 'Event sources to forward to SignalFx. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3".Be cautious with using "aws.lambda" (more in README)'
+    Description: 'Event sources to forward to SignalFx. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3". Be cautious with using "aws.lambda" (more in README)'
 
 Resources:
   SignalFxLambdaWrapperApp:
