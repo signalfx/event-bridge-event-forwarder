@@ -17,10 +17,7 @@ Parameters:
   EventSources:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
-    Description: 'Event sources to forward to SignalFx. Use "*" for all CloudWatch events. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3".'
-
-Conditions:
-  AllCWEvents: !Equals [!Select [ 0, !Ref EventSources ], '*']
+    Description: 'Event sources to forward to SignalFx. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3". Be cautious with using "aws.lambda" (more in README)'
 
 Resources:
   SignalFxLambdaWrapperApp:
@@ -41,14 +38,14 @@ Resources:
       Layers:
         - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
       Handler: cloudwatch-event-forwarder-no-encryption.handler
-      Runtime: nodejs12.x
+      Runtime: nodejs20.x
       CodeUri: ./examples/cloudwatch-event-forwarder-no-encryption.js
       Timeout: 60
       Environment:
         Variables:
-          SIGNALFX_AUTH_TOKEN:
+          SIGNALFX_ACCESS_TOKEN:
             Ref: SignalFxAccessToken
-          SIGNALFX_INGEST_ENDPOINT:
+          SIGNALFX_ENDPOINT_URL:
             Ref: SignalFxIngestEndpoint
           SIGNALFX_SEND_TIMEOUT:
             Ref: SignalFxSendTimeout
@@ -57,7 +54,7 @@ Resources:
           Type: CloudWatchEvent
           Properties:
             Pattern:
-              source: !If [AllCWEvents, [prefix: "aws"], !Ref EventSources]
+              source: !Ref EventSources
 
 # Publishing the App in Serverless application repo:
 # sam validate --profile <awsprofile> --template template.yaml --region <region>

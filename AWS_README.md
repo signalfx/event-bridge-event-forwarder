@@ -67,8 +67,8 @@ The reason for this behavior is to avoid an infinite loop: when the lambda runs,
 * Click on the right application entry, depending if you wish to encrypt the token environment variable in transit.
 #### Step 2: Fill out the Application Parameters  
 * Set the `Application Name` to describe the application's purpose in your environment, for example `SignalFx CloudWatch Event Forwarder App`.
-* Set the `EventSources` parameter to include the services from which you want to forward events to SignalFx. Enter `*` for all CloudWatch Events.
-Enter a comma delimited list to specify multiple services as sources, for example: `aws.ec2,aws.s3`.
+* Set the `EventSources` parameter to include the services from which you want to forward events to SignalFx.
+Enter a comma delimited list to specify multiple services as sources, for example: `aws.ec2,aws.s3`. Please be aware that including `aws.lambda` may lead to invocation loop (e.g. if you have two lambdas which react on `aws.lambda` they will cause invocation loop). If you use encrypted version please avoid `aws.kms` as it leads to invocation loop.
 
     Note: You will be later able to modify the Event Pattern in CloudWatch Events console.
 
