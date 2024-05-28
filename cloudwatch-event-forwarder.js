@@ -1,6 +1,6 @@
 // This code will transform CloudWatch Event to SignalFx Custom Event and send it to the
 // SignalFx realm configured with environment variables. It uses SignalFx Lambda Wrapper.
-// If you do not intend to encrypt your SIGNALFX_AUTH_TOKEN, you can use much simpler cloudwatch-event-forwarder-no-encryption.js instead.
+// If you do not intend to encrypt your SIGNALFX_ACCESS_TOKEN, you can use much simpler cloudwatch-event-forwarder-no-encryption.js instead.
 
 'use strict';
 
@@ -9,15 +9,15 @@ const aws = require('aws-sdk');
 const kms = new aws.KMS();
 
 async function setToken() {
-  if (!process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN) {
-    if (process.env.SIGNALFX_AUTH_TOKEN) {
-      return Promise.resolve(process.env.SIGNALFX_AUTH_TOKEN);
+  if (!process.env.ENCRYPTED_SIGNALFX_ACCESS_TOKEN) {
+    if (process.env.SIGNALFX_ACCESS_TOKEN) {
+      return Promise.resolve(process.env.SIGNALFX_ACCESS_TOKEN);
     } else {
-      return Promise.reject('Neither SIGNALFX_AUTH_TOKEN nor ENCRYPTED_SIGNALFX_AUTH_TOKEN is set');
+      return Promise.reject('Neither SIGNALFX_ACCESS_TOKEN nor ENCRYPTED_SIGNALFX_ACCESS_TOKEN is set');
     }
   }
 
-  const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SIGNALFX_AUTH_TOKEN, 'base64');
+  const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SIGNALFX_ACCESS_TOKEN, 'base64');
   return new Promise((resolve, reject) => {
     const params = {
       CiphertextBlob: tokenToDecrypt

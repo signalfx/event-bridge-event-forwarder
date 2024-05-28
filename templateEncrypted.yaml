@@ -17,7 +17,7 @@ Parameters:
   EventSources:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
-    Description: 'Event sources to forward to SignalFx. Use "*" if you want all CloudWatch Events (except for aws.kms). Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3".'
+    Description: 'Event sources to forward to SignalFx. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3".'
   KeyId:
     Type: String
     Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
@@ -45,12 +45,12 @@ Resources:
       Layers:
         - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
       Handler: cloudwatch-event-forwarder.handler
-      Runtime: nodejs12.x
+      Runtime: nodejs20.x
       CodeUri: cloudwatch-event-forwarder.js
       Timeout: 60
       Environment:
         Variables:
-          ENCRYPTED_SIGNALFX_AUTH_TOKEN:
+          ENCRYPTED_SIGNALFX_ACCESS_TOKEN:
             Ref: EncryptedSignalFxAccessToken
           SIGNALFX_INGEST_ENDPOINT:
             Ref: SignalFxIngestEndpoint
@@ -61,7 +61,7 @@ Resources:
           Type: CloudWatchEvent
           Properties:
             Pattern:
-               source: !If [AllCWEvents, [anything-but: "aws.kms"], !Ref EventSources]
+               source: !Ref EventSources
       Policies:
         - KMSDecryptPolicy:
             KeyId:
