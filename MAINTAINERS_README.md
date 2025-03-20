@@ -1,7 +1,6 @@
 ### Publishing the App in Serverless application repo:
 
 1. Make necessary changes (if any) in `template.yaml` and `templateEncrypted.yaml`.
-A typical change would be increasing a semantic version of a layer to use.
 
 2. Run validation for both templates to make sure you have a correct syntax:
    ```bash
@@ -23,11 +22,11 @@ A typical change would be increasing a semantic version of a layer to use.
 * Go to Serverless Application Repository --> Published Applications --> Publish new version
 * Description for the encrypted version:
 
-`A Lambda function triggered by CloudWatch Events, which transforms a CloudWatch Event into SignalFx Custom Event and sends it to SignalFx. Supports encryption of a token variable.`
+`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into SignalFx Custom Event and sends it to Splunk Observability Cloud (aka SignalFx). Supports encryption of a token variable.`
 
 * Description for the base version:
 
-`A Lambda function triggered by CloudWatch Events, which transforms a CloudWatch Event into SignalFx Custom Event and sends it to SignalFx.`
+`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into SignalFx Custom Event and sends it to Splunk Observability Cloud (aka SignalFx).`
 
 * Upload `AWS_README.md` as a README
 * Choose Apache License 2.0
