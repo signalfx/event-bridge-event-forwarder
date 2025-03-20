@@ -1,8 +1,8 @@
 {
-  "name": "cloudwatch-event-forwarder",
+  "name": "event-bridge-event-forwarder",
   "version": "0.0.1",
-  "description": "Examples demonstrating how to send Cloudwatch Events to SignalFx",
-  "main": "cloudwatch-event-forwarder.js",
+  "description": "Lambda function demonstrating how to send EventBridge Events to SignalFx",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/signalfx/cloudwatch-event-forwarder/issues"
   },
-  "homepage": "https://github.com/signalfx/cloudwatch-event-forwarder#readme"
+  "homepage": "https://github.com/signalfx/cloudwatch-event-forwarder#readme",
+  "dependencies": {
+    "@aws-sdk/client-kms": "^3.758.0",
+    "aws-sdk": "^2.1692.0"
+  }
 }
