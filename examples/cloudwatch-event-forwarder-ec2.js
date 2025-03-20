@@ -4,7 +4,7 @@ const signalFxLambda = require('signalfx-lambda');
 
 exports.handler = signalFxLambda.asyncWrapper(async (event, __) => {
   if (event.source !== 'aws.ec2') {
-    return Promise.reject('The source of the received event was not aws.ec2, but ', event.source);
+    return Promise.reject('The source of the received event was not aws.ec2, but ' + event.source);
   }
 
   // if there is a limited set of possible values, you can send key-value pairs as dimensions. Otherwise please use properties.
