@@ -2,7 +2,7 @@
   "name": "event-bridge-event-forwarder",
   "version": "0.0.1",
   "description": "Lambda function demonstrating how to send EventBridge Events to SignalFx",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

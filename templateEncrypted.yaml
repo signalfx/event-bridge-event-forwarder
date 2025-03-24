@@ -44,9 +44,9 @@ Resources:
     Properties:
       Layers:
         - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
-      Handler: cloudwatch-event-forwarder.handler
-      Runtime: nodejs20.x
-      CodeUri: cloudwatch-event-forwarder.js
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: ./index.mjs
       Timeout: 60
       Environment:
         Variables:
