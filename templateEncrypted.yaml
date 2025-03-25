@@ -22,28 +22,10 @@ Parameters:
     Type: String
     Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
 
-Conditions:
-  AllCWEvents: !Equals [!Select [ 0, !Ref EventSources ], '*']
-
-
 Resources:
-  SignalFxLambdaWrapperApp:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location:
-        ApplicationId: arn:aws:serverlessrepo:us-east-2:254067382080:applications/wrapper-node-sfx-app
-        SemanticVersion: 0.4.2
-    Outputs:
-      LayerArn:
-        Value:
-          Fn:GetAtt:
-            - SignalFxLambdaWrapperApp
-            - Arn
   SignalFxCloudwatchEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
-      Layers:
-        - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
       Handler: index.handler
       Runtime: nodejs22.x
       CodeUri: ./index.mjs
