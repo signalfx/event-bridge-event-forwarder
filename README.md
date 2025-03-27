@@ -107,7 +107,7 @@ While more time consuming, it will give you better understanding of the inner wo
 * Click "Create function."
 
 ##### Step 1.2: Copy function code and set the handler
-* Upload the [`event-bridge-event-forwarder.zip`](event-bridge-event-forwarder.zip) file to the AWS Lambda Editor.
+* Upload the `event-bridge-event-forwarder.zip` file to the AWS Lambda Editor. You can find the latest version on the [GitHub Releases](https://github.com/signalfx/event-bridge-event-forwarder/releases) page.
 * Make sure the function handler is set to `src/index.handler`.
 
 #### Step 3: Configure environment variables
@@ -197,4 +197,4 @@ will be transformed to a Custom SignalFx Event:
 ```
 
 #### Useful links:
-* [Sending Custom Events to SignalFx](https://dev.splunk.com/observability/docs/datamodel/custom_events/)
+* [Sending Custom Events to the Splunk Observability Cloud (aka SignalFx)](https://dev.splunk.com/observability/docs/datamodel/custom_events/)
