@@ -2,21 +2,21 @@
   "name": "event-bridge-event-forwarder",
   "version": "0.0.1",
   "description": "Lambda function demonstrating how to send EventBridge Events to SignalFx",
-  "main": "index.mjs",
+  "main": "src/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/signalfx/cloudwatch-event-forwarder.git"
+    "url": "git+https://github.com/signalfx/event-bridge-event-forwarder.git"
   },
   "author": "",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/signalfx/cloudwatch-event-forwarder/issues"
+    "url": "https://github.com/signalfx/event-bridge-event-forwarder/issues"
   },
-  "homepage": "https://github.com/signalfx/cloudwatch-event-forwarder#readme",
-  "dependencies": {
+  "homepage": "https://github.com/signalfx/event-bridge-event-forwarder#readme",
+  "devDependencies": {
     "@aws-sdk/client-kms": "^3.758.0",
     "aws-sdk": "^2.1692.0"
   }

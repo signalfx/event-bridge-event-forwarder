@@ -108,7 +108,7 @@ While more time consuming, it will give you better understanding of the inner wo
 
 ##### Step 1.2: Copy function code and set the handler
 * Upload the [`event-bridge-event-forwarder.zip`](event-bridge-event-forwarder.zip) file to the AWS Lambda Editor.
-* Make sure the function handler is set to `index.handler`.
+* Make sure the function handler is set to `src/index.handler`.
 
 #### Step 3: Configure environment variables
 ##### Option 1) Setup without token encryption

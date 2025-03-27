@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Description: 'SignalFx Cloudwatch Event Forwarder App - Encrypted token'
+Description: 'Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder App - Encrypted token'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
@@ -23,12 +23,12 @@ Parameters:
     Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
 
 Resources:
-  SignalFxCloudwatchEventsForwarder:
+  SignalFxEventBridgeEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
       Runtime: nodejs22.x
-      CodeUri: ./index.mjs
+      CodeUri: ./src
       Timeout: 60
       Environment:
         Variables:

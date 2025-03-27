@@ -3,8 +3,8 @@
 
 'use strict';
 
-import {buildApiConfig, sendEvent} from './src/signalfx_client.mjs';
-import {convertEventBridgeEventToSignalFxEvent} from './src/transform-helper.mjs';
+import {buildApiConfig, sendEvent} from './signalfx_client.mjs';
+import {convertEventBridgeEventToSignalFxEvent} from './transform-helper.mjs';
 import {DecryptCommand, KMSClient} from '@aws-sdk/client-kms'; // provided by the AWS lambda runtime
 
 async function getApiConfig() {

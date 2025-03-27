@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Description: 'Splunk Observability Cloud (aka SignalFx) Cloudwatch Event Forwarder App'
+Description: 'Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder App'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
@@ -20,12 +20,12 @@ Parameters:
     Description: 'Event sources to forward to the Splunk Observability Cloud. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3". Be cautious with using "aws.lambda" (more in README)'
 
 Resources:
-  SignalFxCloudwatchEventsForwarder:
+  SignalFxEventBridgeEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
       Runtime: nodejs22.x
-      CodeUri: ./index.mjs
+      CodeUri: ./src
       Timeout: 60
       Environment:
         Variables:

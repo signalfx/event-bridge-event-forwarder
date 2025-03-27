@@ -12,9 +12,9 @@
 
 3. Run packaging:
    ```bash
-   sam package --profile rnd --s3-bucket production-serverless-repo --s3-prefix cloudwatch-event-forwarder --region us-east-2 --template template.yaml --output-template-file packaged.yaml
+   sam package --profile rnd --s3-bucket production-serverless-repo --s3-prefix event-bridge-event-forwarder --region us-east-2 --template template.yaml --output-template-file packaged.yaml
    
-   sam package --profile rnd --s3-bucket production-serverless-repo --s3-prefix cloudwatch-event-forwarder --region us-east-2 --template templateEncrypted.yaml --output-template-file packagedEncrypted.yaml
+   sam package --profile rnd --s3-bucket production-serverless-repo --s3-prefix event-bridge-event-forwarder --region us-east-2 --template templateEncrypted.yaml --output-template-file packagedEncrypted.yaml
    ```
 
 4. Publish the packaged file via AWS console
