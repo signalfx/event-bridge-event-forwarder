@@ -197,4 +197,4 @@ will be transformed to a Custom SignalFx Event:
 ```
 
 #### Useful links:
-* [Sending Custom Events to SignalFx](https://dev.splunk.com/observability/docs/datamodel/custom_events/)
+* [Sending Custom Events to the Splunk Observability Cloud (aka SignalFx)](https://dev.splunk.com/observability/docs/datamodel/custom_events/)
