@@ -1,15 +1,15 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Description: 'SignalFx Cloudwatch Event Forwarder App - Encrypted token'
+Description: 'Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder App - Encrypted token'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   EncryptedSignalFxAccessToken:
     Type: String
-    Description: 'Encrypted SignalFx Access Token. The token to encrypt can be found in SignalFx (top right corner) --> Organization Settings --> Access Tokens.'
+    Description: 'Encrypted Splunk Observability Cloud (aka SignalFx) Access Token. The token to encrypt can be found in Splunk Observability Cloud --> Settings --> Access Tokens.'
   SignalFxIngestEndpoint:
     Type: String
     Default: 'https://ingest.<REALM>.signalfx.com'
-    Description: 'SignalFx Ingest Endpoint. Can be found in SignalFx (top right corner) --> My Profile --> Endpoints --> Real-time Data Ingest.'
+    Description: 'Splunk Observability Cloud Ingest Endpoint. Can be found in the Splunk Observability Cloud --> My Profile --> Organizations --> Real-time Data Ingest.'
   SignalFxSendTimeout:
     Type: String
     Default: 1000
@@ -17,42 +17,24 @@ Parameters:
   EventSources:
     Type: CommaDelimitedList
     Default: 'aws.ec2'
-    Description: 'Event sources to forward to SignalFx. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3. Please avoid "aws.kms" as this will lead to invocation loop. Be cautious with using "aws.lambda" (more in README)'
+    Description: 'Event sources to forward to the Splunk Observability Cloud. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3". Please avoid "aws.kms" as this will lead to an invocation loop. Be cautious with using "aws.lambda" (more in README).'
   KeyId:
     Type: String
     Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
 
-Conditions:
-  AllCWEvents: !Equals [!Select [ 0, !Ref EventSources ], '*']
-
-
 Resources:
-  SignalFxLambdaWrapperApp:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location:
-        ApplicationId: arn:aws:serverlessrepo:us-east-2:254067382080:applications/wrapper-node-sfx-app
-        SemanticVersion: 0.4.2
-    Outputs:
-      LayerArn:
-        Value:
-          Fn:GetAtt:
-            - SignalFxLambdaWrapperApp
-            - Arn
-  SignalFxCloudwatchEventsForwarder:
+  SignalFxEventBridgeEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
-      Layers:
-        - !GetAtt SignalFxLambdaWrapperApp.Outputs.LayerArn
-      Handler: cloudwatch-event-forwarder.handler
-      Runtime: nodejs20.x
-      CodeUri: cloudwatch-event-forwarder.js
+      Handler: index.handler
+      Runtime: nodejs22.x
+      CodeUri: ./src
       Timeout: 60
       Environment:
         Variables:
           ENCRYPTED_SIGNALFX_ACCESS_TOKEN:
             Ref: EncryptedSignalFxAccessToken
-          SIGNALFX_INGEST_ENDPOINT:
+          SIGNALFX_ENDPOINT_URL:
             Ref: SignalFxIngestEndpoint
           SIGNALFX_SEND_TIMEOUT:
             Ref: SignalFxSendTimeout

@@ -1,1 +1,10 @@
+# wildcards
 .idea/*
+*.zip
+
+# dirs
+node_modules
+
+# files
+commit-id.txt
+package-lock.json
