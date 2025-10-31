@@ -1,16 +1,15 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Description: 'Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder App - Encrypted token'
+Description: 'Splunk Observability Cloud EventBridge Event Forwarder App - Encrypted token'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
-  EncryptedSignalFxAccessToken:
+  EncryptedSplunkObservabilityCloudAccessToken:
     Type: String
-    Description: 'Encrypted Splunk Observability Cloud (aka SignalFx) Access Token. The token to encrypt can be found in Splunk Observability Cloud --> Settings --> Access Tokens.'
-  SignalFxIngestEndpoint:
+    Description: 'Encrypted Splunk Observability Cloud Access Token. The token to encrypt can be found in Splunk Observability Cloud --> Settings --> Access Tokens.'
+  SplunkObservabilityCloudIngestEndpoint:
     Type: String
-    Default: 'https://ingest.<REALM>.signalfx.com'
-    Description: 'Splunk Observability Cloud Ingest Endpoint. Can be found in the Splunk Observability Cloud --> My Profile --> Organizations --> Real-time Data Ingest.'
-  SignalFxSendTimeout:
+    Description: 'Splunk Observability Cloud Ingest Endpoint. Can be found in the Splunk Observability Cloud --> My Profile --> Organizations --> Real-time Data Ingest Endpoint.'
+  SplunkObservabilityCloudSendTimeout:
     Type: String
     Default: 1000
     Description: 'Send timeout in milliseconds.'
@@ -20,10 +19,10 @@ Parameters:
     Description: 'Event sources to forward to the Splunk Observability Cloud. Use comma delimited list to specify multiple sources, for example: "aws.ec2,aws.s3". Please avoid "aws.kms" as this will lead to an invocation loop. Be cautious with using "aws.lambda" (more in README).'
   KeyId:
     Type: String
-    Description: 'Key Id of the key used to encrypt the SignalFx token. Key Id is the last part of the Key ARN.'
+    Description: 'Key Id of the key used to encrypt the Splunk Observability Cloud token. Key Id is the last part of the Key ARN.'
 
 Resources:
-  SignalFxEventBridgeEventsForwarder:
+  SplunkObservabilityCloudEventBridgeEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
@@ -32,12 +31,12 @@ Resources:
       Timeout: 60
       Environment:
         Variables:
-          ENCRYPTED_SIGNALFX_ACCESS_TOKEN:
-            Ref: EncryptedSignalFxAccessToken
-          SIGNALFX_ENDPOINT_URL:
-            Ref: SignalFxIngestEndpoint
-          SIGNALFX_SEND_TIMEOUT:
-            Ref: SignalFxSendTimeout
+          ENCRYPTED_SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN:
+            Ref: EncryptedSplunkObservabilityCloudAccessToken
+          SPLUNK_OBSERVABILITY_CLOUD_ENDPOINT_URL:
+            Ref: SplunkObservabilityCloudIngestEndpoint
+          SPLUNK_OBSERVABILITY_CLOUD_SEND_TIMEOUT:
+            Ref: SplunkObservabilityCloudSendTimeout
       Events:
         CWEvent:
           Type: CloudWatchEvent

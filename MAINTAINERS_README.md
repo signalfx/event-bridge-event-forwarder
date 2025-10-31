@@ -22,11 +22,11 @@
 * Go to Serverless Application Repository --> Published Applications --> Publish new version
 * Description for the encrypted version:
 
-`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into SignalFx Custom Event and sends it to Splunk Observability Cloud (aka SignalFx). Supports encryption of a token variable.`
+`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into Splunk Observability Cloud Custom Event and sends it to Splunk Observability Cloud. Supports encryption of a token variable.`
 
 * Description for the base version:
 
-`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into SignalFx Custom Event and sends it to Splunk Observability Cloud (aka SignalFx).`
+`A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into Splunk Observability Cloud Custom Event and sends it to Splunk Observability Cloud.`
 
 * Upload `AWS_README.md` as a README
 * Choose Apache License 2.0

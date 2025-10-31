@@ -1,16 +1,15 @@
 AWSTemplateFormatVersion : '2010-09-09'
-Description: 'Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder App'
+Description: 'Splunk Observability Cloud EventBridge Event Forwarder App'
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
-  SignalFxAccessToken:
+  SplunkObservabilityCloudAccessToken:
     Type: String
     Description: 'Splunk Observability Cloud Access Token. Can be found in the Splunk Observability Cloud --> Settings --> Access Tokens.'
-  SignalFxIngestEndpoint:
+  SplunkObservabilityCloudIngestEndpoint:
     Type: String
-    Default: 'https://ingest.<REALM>.signalfx.com'
-    Description: 'Splunk Observability Cloud Ingest Endpoint. Can be found in the Splunk Observability Cloud --> My Profile --> Organizations --> Real-time Data Ingest.'
-  SignalFxSendTimeout:
+    Description: 'Splunk Observability Cloud Ingest Endpoint. Can be found in the Splunk Observability Cloud --> My Profile --> Organizations --> Real-time Data Ingest Endpoint.'
+  SplunkObservabilityCloudSendTimeout:
     Type: String
     Default: 1000
     Description: 'Send timeout in milliseconds.'
@@ -20,7 +19,7 @@ Parameters:
     Description: 'Event sources to forward to the Splunk Observability Cloud. Use comma delimited list for multiple sources, for example: "aws.ec2,aws.s3". Be cautious with using "aws.lambda" (more in README)'
 
 Resources:
-  SignalFxEventBridgeEventsForwarder:
+  SplunkObservabilityCloudEventBridgeEventsForwarder:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
@@ -29,12 +28,12 @@ Resources:
       Timeout: 60
       Environment:
         Variables:
-          SIGNALFX_ACCESS_TOKEN:
-            Ref: SignalFxAccessToken
-          SIGNALFX_ENDPOINT_URL:
-            Ref: SignalFxIngestEndpoint
-          SIGNALFX_SEND_TIMEOUT:
-            Ref: SignalFxSendTimeout
+          SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN:
+            Ref: SplunkObservabilityCloudAccessToken
+          SPLUNK_OBSERVABILITY_CLOUD_ENDPOINT_URL:
+            Ref: SplunkObservabilityCloudIngestEndpoint
+          SPLUNK_OBSERVABILITY_CLOUD_SEND_TIMEOUT:
+            Ref: SplunkObservabilityCloudSendTimeout
       Events:
         CWEvent:
           Type: CloudWatchEvent
