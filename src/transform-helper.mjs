@@ -36,7 +36,7 @@ function toUnixTime(dateString) {
     return date.getTime();
 }
 
-function convertEventBridgeEventToSignalFxEvent(ebEvent) {
+function convertEventBridgeEventToSplunkObservabilityCloudEvent(ebEvent) {
     const detailsMap = extractSanitizedEventDetails(ebEvent);
 
     const sfxEvent = {
@@ -60,5 +60,5 @@ function convertEventBridgeEventToSignalFxEvent(ebEvent) {
 }
 
 export {
-    convertEventBridgeEventToSignalFxEvent
+    convertEventBridgeEventToSplunkObservabilityCloudEvent
 }

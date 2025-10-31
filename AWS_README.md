@@ -1,8 +1,8 @@
-# Splunk Observability Cloud (aka SignalFx) EventBridge Event Forwarder
+# Splunk Observability Cloud EventBridge Event Forwarder
 
 ## Overview
-These instructions will describe the steps to deploy the Lambda function which forwards the Amazon EventBridge events to the Splunk Observability Cloud (aka SignalFx) as Custom Events.
-The deployed function can be easily modified to send other types of Custom Events to SignalFx,
+These instructions will describe the steps to deploy the Lambda function which forwards the Amazon EventBridge events to the Splunk Observability Cloud as Custom Events.
+The deployed function can be easily modified to send other types of Custom Events to Splunk Observability Cloud,
 or to transform events before sending (for example, to filter only selected fields or to use different field names).
 
 There are two ways to install this Lambda function: using AWS Serverless Repository (recommended) or AWS Lambda Console.
@@ -14,37 +14,35 @@ After installation, this Lambda function will be triggered by an EventBridge Eve
 You should use the rules to filter the EventBridge Events you want to be forwarded.
 
 ## Prerequisites
-##### 1. Prepare SignalFx Access Token
+##### 1. Prepare Splunk Observability Cloud Access Token
 To retrieve your [access token](https://docs.splunk.com/observability/en/admin/authentication/authentication-tokens/org-tokens.html):
 
 * Open Splunk Observability Cloud and go to Settings > Access Tokens.
 * Choose an existing token or create a new one.
 * Click the entry with the token and click "Show value".
 
-This value will be later used as a SignalFx Access Token.
+This value will be later used as a Splunk Observability Cloud Access Token.
 
-##### 2. Locate SignalFx Ingest Endpoint
-By default, this Function will send data to the us0 realm. As a result, if you are not in the us0 realm, then you must explicitly set your realm.
+##### 2. Locate Splunk Observability Cloud Ingest Endpoint
+To locate your Splunk Observability Cloud Ingest Endpoint:
 
-To locate your realm:
-
-* Open SignalFx and in the top, right corner, click your profile icon.
+* Open Splunk Observability Cloud and in the top, right corner, click your profile icon.
 * Click My Profile.
-* In the Organizations, Endpoints section, notice the value listed as "Real-time Data Ingest Endpoint".
+* In the Organizations tab, notice the value listed as "Real-time Data Ingest Endpoint".
 
-This value will be later used as a SignalFx Ingest Endpoint.
+This value will be later used as a Splunk Observability Cloud Ingest Endpoint.
 
-##### 3. (Optional) Create a managed KMS key to encrypt the SignalFx Access Token in transit
+##### 3. (Optional) Create a managed KMS key to encrypt the Splunk Observability Cloud Access Token in transit
 
 ###### Overview
-You will need to provide the Lambda Function with a SignalFx Access Token stored in an environment variable.
+You will need to provide the Lambda Function with a Splunk Observability Cloud Access Token stored in an environment variable.
 As a best security practice, it is recommended that the token is encrypted using the Amazon Key Management Service. For the overview of this process see
 "Securing Environment Variables" section of [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html).
 
 In both installation methods, you have the option to use either encrypted or plain token variable.
 
 ###### Creating a KMS key
-In order to encrypt SignalFx Access Token, please make sure you have a managed Symmetric KMS key available for use.
+In order to encrypt Splunk Observability Cloud Access Token, please make sure you have a managed Symmetric KMS key available for use.
 * If you are creating a new key, make sure you choose a Symmetric key.
 * For overview and help on securing environment variables, consult the [AWS documentation](https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-encryption).
 * Documentation on KMS encryption using the AWS CLI can be found [here](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/kms/encrypt.html).
@@ -61,43 +59,43 @@ __NOTE__: If you choose a version with token encryption, it will be by default c
 
 #### Step 1: Locate the application in Serverless Application Repository
 * Sign in to the AWS Management Console and open the [Serverless Application Repository console](https://console.aws.amazon.com/serverlessrepo/).
-* Choose "Available Applications" and search for "SignalFx EventBridge Event Forwarder" or "SignalFx EventBridge Event Forwarder - encrypted" application.
+* Choose "Available Applications" and search for "Splunk Observability Cloud EventBridge Event Forwarder" or "Splunk Observability Cloud EventBridge Event Forwarder - encrypted" application.
 * Click on the right application entry, depending if you wish to encrypt the token environment variable in transit.
 #### Step 2: Fill out the Application Parameters
-* Set the `Application Name` to describe the application's purpose in your environment, for example `SignalFx EventBridge Event Forwarder App`.
-* Set the `EventSources` parameter to include the services from which you want to forward events to SignalFx.
+* Set the `Application Name` to describe the application's purpose in your environment, for example `Splunk Observability Cloud EventBridge Event Forwarder App`.
+* Set the `EventSources` parameter to include the services from which you want to forward events to Splunk Observability Cloud.
   Enter a comma delimited list to specify multiple services as sources, for example: `aws.ec2,aws.s3`. Please be aware that including `aws.lambda` may lead to invocation loop (e.g. if you have two lambdas which react on `aws.lambda` they will cause invocation loop). If you use encrypted version please avoid `aws.kms` as it leads to an invocation loop.
 
   Note: You will be later able to modify the Event Pattern in the EventBridge Events console.
 
-* If you chose version without encryption, set `SignalFxAccessToken` to the SignalFx Access Token value you identified in Prerequisites.
-* If you chose version with encryption, set `EncryptedSignalFxAccessToken` to the value of SignalFx Access Token identified in Prerequisites encrypted with a prepared KMS key.
+* If you chose version without encryption, set `SplunkObservabilityCloudAccessToken` to the Splunk Observability Cloud Access Token value you identified in Prerequisites.
+* If you chose version with encryption, set `EncryptedSplunkObservabilityCloudAccessToken` to the value of Splunk Observability Cloud Access Token identified in Prerequisites encrypted with a prepared KMS key.
   Set the `KeyId` parameter to the Key Id of this key; it is the last section of the key's ARN.
-* Set `SignalFxIngestEndpoint` parameter to the SignalFx Ingest Endpoint value you identified in Prerequisites.
-* You may leave `SignalFxSendTimeout` parameter with a default value of 1000 ms.
+* Set `SplunkObservabilityCloudIngestEndpoint` parameter to the Splunk Observability Cloud Ingest Endpoint value you identified in Prerequisites.
+* You may leave `SplunkObservabilityCloudSendTimeout` parameter with a default value of 1000 ms.
 
 #### Step 3: Deploy
 * Click "Deploy".
-* You're ready! The integration is now configured. See [here](https://docs.splunk.com/observability/en/metrics-and-metadata/view-data-events.html#events-intro) how to view and use events in SignalFx.
+* You're ready! The integration is now configured. See [here](https://docs.splunk.com/observability/en/metrics-and-metadata/view-data-events.html#events-intro) how to view and use events in Splunk Observability Cloud.
 * (Optional) If you wish to modify any application parameters, you can now do so in AWS Console. You may be interested in modifying Lambda code or the Amazon EventBridge rule which triggers the Lambda.
 
 ### Additional Information
-#### Details on EventBridge event to SignalFx Custom Event transformation
-SignalFx Custom Event needs to be sent as a key-value map. This Lambda function will transform any Amazon EventBridge event to conform to [naming and format restrictions of a SignalFx](https://dev.splunk.com/observability/docs/datamodel/custom_events),
-and then forward it to SignalFx.
+#### Details on EventBridge event to Splunk Observability Cloud Custom Event transformation
+Splunk Observability Cloud Custom Event needs to be sent as a key-value map. This Lambda function will transform any Amazon EventBridge event to conform to [naming and format restrictions of Splunk Observability Cloud](https://dev.splunk.com/observability/docs/datamodel/custom_events),
+and then forward it to Splunk Observability Cloud.
 
-By default, based on an EventBridge Event, this lambda will create a SignalFx Custom Event in a following way:
+By default, based on an EventBridge Event, this lambda will create a Splunk Observability Cloud Custom Event in a following way:
 
 * event category will always be set to `USER_DEFINED`
 * event type will always be set to `EventBridge`
 * `source`, `account`, `detail-type`, `region` keys which are common for all EventBridge events and have a limited set of possible values will be sent as `dimensions` (`detail-type` will be sent as `detailType`)
-* `time` property will be converted to Unix epoch time and sent as a timestamp of the SignalFx Custom Event.
+* `time` property will be converted to Unix epoch time and sent as a timestamp of the Splunk Observability Cloud Custom Event.
 
 Other keys will be transformed in the ways listed below, and sent as `properties`:
 * special characters in keys, such as `" "` (space), `":"` or `"/"` will be replaced with a `"_"` character. The allowed characters are `[a-zA-Z0-9\-_]`.
-* for nested objects, each of its properties will be copied to the SignalFx Custom Event under a key which is a join of all parent objects' names separated with a `"_"` character.
+* for nested objects, each of its properties will be copied to the Splunk Observability Cloud Custom Event under a key which is a join of all parent objects' names separated with a `"_"` character.
 See exemplary transformation below.
-* for arrays, each element will be copied to the SignalFx Custom Event under a key which is a `"_"` character join of an array name and an index of the element.
+* for arrays, each element will be copied to the Splunk Observability Cloud Custom Event under a key which is a `"_"` character join of an array name and an index of the element.
 
 
 For example, a sample EventBridge event:
@@ -119,7 +117,7 @@ For example, a sample EventBridge event:
   }
 }
 ```
-will be transformed to a Custom SignalFx Event:
+will be transformed to a Custom Splunk Observability Cloud Event:
 ```json
 {
   "category":"USER_DEFINED",
@@ -141,4 +139,4 @@ will be transformed to a Custom SignalFx Event:
 ```
 
 #### Useful links:
-* [Sending Custom Events to SignalFx](https://dev.splunk.com/observability/docs/datamodel/custom_events)
+* [Sending Custom Events to Splunk Observability Cloud](https://dev.splunk.com/observability/docs/datamodel/custom_events)

@@ -1,7 +1,7 @@
 {
   "name": "event-bridge-event-forwarder",
   "version": "0.0.1",
-  "description": "Lambda function demonstrating how to send EventBridge Events to SignalFx",
+  "description": "Lambda function demonstrating how to send EventBridge Events to Splunk Observability Cloud",
   "main": "src/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

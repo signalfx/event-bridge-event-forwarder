@@ -1,5 +1,6 @@
 # wildcards
 .idea/*
+*.iml
 *.zip
 
 # dirs

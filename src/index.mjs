@@ -1,20 +1,20 @@
-// This code will transform Amazon EventBridge Event to SignalFx Custom Event and send it to the
-// Splunk Observability Cloud (aka SignalFx) realm configured with environment variables.
+// This code will transform Amazon EventBridge Event to Splunk Observability Cloud Custom Event and send it to the
+// Splunk Observability Cloud realm configured with environment variables.
 
 'use strict';
 
-import {buildApiConfig, sendEvent} from './signalfx_client.mjs';
-import {convertEventBridgeEventToSignalFxEvent} from './transform-helper.mjs';
+import {buildApiConfig, sendEvent} from './splunk_observability_cloud_client.mjs';
+import {convertEventBridgeEventToSplunkObservabilityCloudEvent} from './transform-helper.mjs';
 import {DecryptCommand, KMSClient} from '@aws-sdk/client-kms'; // provided by the AWS lambda runtime
 
 async function getApiConfig() {
-    let apiHost = process.env.SIGNALFX_ENDPOINT_URL;
-    if (!apiHost && process.env.SIGNALFX_INGEST_ENDPOINT) {
-        console.log('SIGNALFX_INGEST_ENDPOINT is deprecated. Please use SIGNALFX_ENDPOINT_URL instead');
-        apiHost = process.env.SIGNALFX_INGEST_ENDPOINT;
+    let apiHost = process.env.SPLUNK_OBSERVABILITY_CLOUD_ENDPOINT_URL;
+    if (!apiHost && process.env.SPLUNK_OBSERVABILITY_CLOUD_INGEST_ENDPOINT) {
+        console.log('SPLUNK_OBSERVABILITY_CLOUD_INGEST_ENDPOINT is deprecated. Please use SPLUNK_OBSERVABILITY_CLOUD_ENDPOINT_URL instead');
+        apiHost = process.env.SPLUNK_OBSERVABILITY_CLOUD_INGEST_ENDPOINT;
     }
 
-    const timeoutMaybe = Number(process.env.SIGNALFX_SEND_TIMEOUT);
+    const timeoutMaybe = Number(process.env.SPLUNK_OBSERVABILITY_CLOUD_SEND_TIMEOUT);
     const timeoutMs = !isNaN(timeoutMaybe) ? timeoutMaybe : 3000;
 
     const accessToken = await getAccessToken();
@@ -23,23 +23,23 @@ async function getApiConfig() {
 }
 
 async function getAccessToken() {
-    if (process.env.ENCRYPTED_SIGNALFX_ACCESS_TOKEN) {
+    if (process.env.ENCRYPTED_SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN) {
         return getDecryptedAccessToken();
     }
 
-    let accessToken = process.env.SIGNALFX_ACCESS_TOKEN;
-    if (!accessToken && process.env.SIGNALFX_AUTH_TOKEN) {
-        console.log('SIGNALFX_AUTH_TOKEN is deprecated. Please use SIGNALFX_ACCESS_TOKEN instead');
-        accessToken = process.env.SIGNALFX_AUTH_TOKEN;
+    let accessToken = process.env.SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN;
+    if (!accessToken && process.env.SPLUNK_OBSERVABILITY_CLOUD_AUTH_TOKEN) {
+        console.log('SPLUNK_OBSERVABILITY_CLOUD_AUTH_TOKEN is deprecated. Please use SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN instead');
+        accessToken = process.env.SPLUNK_OBSERVABILITY_CLOUD_AUTH_TOKEN;
     }
     if (accessToken) {
         return accessToken;
     }
-    throw new Error('Neither SIGNALFX_ACCESS_TOKEN nor ENCRYPTED_SIGNALFX_ACCESS_TOKEN is set');
+    throw new Error('Neither SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN nor ENCRYPTED_SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN is set');
 }
 
 async function getDecryptedAccessToken() {
-    const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SIGNALFX_ACCESS_TOKEN, 'base64');
+    const tokenToDecrypt = Buffer.from(process.env.ENCRYPTED_SPLUNK_OBSERVABILITY_CLOUD_ACCESS_TOKEN, 'base64');
 
     const command = new DecryptCommand({CiphertextBlob: tokenToDecrypt});
     const kmsClient = new KMSClient();
@@ -57,8 +57,8 @@ async function handler(event, context) {
             console.warn('Ignoring non EventBridge event', event);
             return;
         }
-        const sfxEvent = convertEventBridgeEventToSignalFxEvent(event);
-        return await sendEvent(apiConfig, sfxEvent);
+        const convertedEvent = convertEventBridgeEventToSplunkObservabilityCloudEvent(event);
+        return await sendEvent(apiConfig, convertedEvent);
     } catch (err) {
         console.error('Error processing event', event, err);
         throw err;
