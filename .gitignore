@@ -9,3 +9,4 @@ node_modules
 # files
 commit-id.txt
 package-lock.json
+AWS_README.md
