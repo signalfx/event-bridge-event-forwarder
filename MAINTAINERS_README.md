@@ -28,6 +28,7 @@
 
 `A Lambda function triggered by EventBridge Events, which transforms an EventBridge Event into Splunk Observability Cloud Custom Event and sends it to Splunk Observability Cloud.`
 
+* Run `.generate_aws_readme.sh` to generate `AWS_README.md`
 * Upload `AWS_README.md` as a README
 * Choose Apache License 2.0
 * Upload packaged.yaml/packagedEncrypted.yaml as a template file
