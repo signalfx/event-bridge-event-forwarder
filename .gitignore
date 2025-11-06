@@ -10,3 +10,5 @@ node_modules
 commit-id.txt
 package-lock.json
 AWS_README.md
+packaged.yaml
+packagedEncrypted.yaml
